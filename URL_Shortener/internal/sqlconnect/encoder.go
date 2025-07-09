@@ -38,3 +38,22 @@ func CheckExistence(url string) (string, error) {
 	}
 	return shortUrl, nil
 }
+
+func AddShortUrl(shortUrl, longUrl string) error {
+	db, err := ConnectDb()
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+
+	query := "UPDATE urls SET short_url = $1 WHERE long_url = $2"
+	res, err := db.Exec(query, shortUrl, longUrl)
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return utils.DatabaseQueryError
+	}
+	if rowsAffected == 0 {
+		return utils.DatabaseQueryError
+	}
+	return nil
+}
