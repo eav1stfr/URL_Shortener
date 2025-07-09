@@ -10,5 +10,9 @@ func ConfigRouter() http.Handler {
 	r := chi.NewRouter()
 	r.Get("/ping", handlers.PingServer)
 
+	registerEncodePath(r)
+
+	registerRedirectPath(r)
+
 	return r
 }

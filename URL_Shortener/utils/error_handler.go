@@ -30,4 +30,16 @@ var (
 	ConnectingToDatabaseError = &AppErr{
 		errMessage: "error connecting to the database",
 		statusCode: http.StatusInternalServerError}
+	InvalidRequestPayload = &AppErr{
+		errMessage: "invalid request payload",
+		statusCode: http.StatusBadRequest}
+	UnitNotFoundError = &AppErr{
+		errMessage: "not found",
+		statusCode: http.StatusNotFound}
+	DatabaseQueryError = &AppErr{
+		errMessage: "database query error",
+		statusCode: http.StatusInternalServerError}
+	UnknownInternalServerError = &AppErr{
+		errMessage: "unknown internal server error",
+		statusCode: http.StatusInternalServerError}
 )
