@@ -23,6 +23,9 @@ func Decode(id int64) (string, error) {
 		log.Println("ERR HERE 2")
 		return "", utils.DatabaseQueryError
 	}
-
+	err = IncrementClickCounter(id)
+	if err != nil {
+		return "", err
+	}
 	return url, nil
 }

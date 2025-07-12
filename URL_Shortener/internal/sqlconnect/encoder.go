@@ -19,6 +19,7 @@ func EncoderDbHandler(url string) (int, error) {
 	if err != nil {
 		return 0, utils.DatabaseQueryError
 	}
+	err = IncrementClickCounter(int64(id))
 	return id, nil
 }
 
@@ -28,13 +29,18 @@ func CheckExistence(url string) (string, error) {
 		return "", utils.ConnectingToDatabaseError
 	}
 	defer db.Close()
-	query := "SELECT short_url FROM urls WHERE long_url = $1"
+	query := "SELECT short_url, id FROM urls WHERE long_url = $1"
 	var shortUrl string
-	err = db.Get(&shortUrl, query, url)
+	var id int64
+	err = db.QueryRow(query, url).Scan(&shortUrl, &id)
 	if err == sql.ErrNoRows {
 		return "", utils.UnitNotFoundError
 	} else if err != nil {
 		return "", utils.DatabaseQueryError
+	}
+	err = IncrementClickCounter(id)
+	if err != nil {
+		return "", err
 	}
 	return shortUrl, nil
 }

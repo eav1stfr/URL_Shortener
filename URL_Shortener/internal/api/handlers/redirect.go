@@ -15,7 +15,6 @@ func RedirectHandler(w http.ResponseWriter, r *http.Request) {
 	longUrl, err := sqlconnect.Decode(id)
 	if err != nil {
 		if appErr, ok := err.(*utils.AppErr); ok {
-			fmt.Println("ERR HERE 1")
 			http.Error(w, appErr.Error(), appErr.GetStatusCode())
 			return
 		}

@@ -12,7 +12,6 @@ import (
 )
 
 func EncodeUrl(w http.ResponseWriter, r *http.Request) {
-
 	var longUrl string
 	err := json.NewDecoder(r.Body).Decode(&longUrl)
 	if err != nil {
