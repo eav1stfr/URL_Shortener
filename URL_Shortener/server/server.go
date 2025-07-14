@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"urlshortener/internal/api/router"
+	"urlshortener/internal/cache"
 )
 
 func main() {
@@ -13,6 +14,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	cache.InitializeRedisClient()
 	mux := router.ConfigRouter()
 	server := &http.Server{
 		Addr:    os.Getenv("API_PORT"),
