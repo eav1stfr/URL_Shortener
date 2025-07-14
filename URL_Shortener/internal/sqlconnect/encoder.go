@@ -3,6 +3,7 @@ package sqlconnect
 import (
 	"database/sql"
 	"time"
+	"urlshortener/internal/cache"
 	"urlshortener/utils"
 )
 
@@ -42,6 +43,7 @@ func CheckExistence(url string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	_ = cache.InsertLongToShortUrlCache(url, shortUrl)
 	return shortUrl, nil
 }
 
@@ -61,5 +63,6 @@ func AddShortUrl(shortUrl, longUrl string) error {
 	if rowsAffected == 0 {
 		return utils.DatabaseQueryError
 	}
+	_ = cache.InsertLongToShortUrlCache(longUrl, shortUrl)
 	return nil
 }

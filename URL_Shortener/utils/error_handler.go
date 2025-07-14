@@ -42,4 +42,7 @@ var (
 	UnknownInternalServerError = &AppErr{
 		errMessage: "unknown internal server error",
 		statusCode: http.StatusInternalServerError}
+	SettingCacheError = &AppErr{
+		errMessage: "error inserting key value pair to redis cache",
+		statusCode: http.StatusInternalServerError}
 )

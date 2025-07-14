@@ -3,10 +3,10 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"strings"
+	"urlshortener/internal/cache"
 	"urlshortener/internal/sqlconnect"
 	"urlshortener/utils"
 )
@@ -22,20 +22,15 @@ func EncodeUrl(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, utils.InvalidRequestPayload.Error(), utils.InvalidRequestPayload.GetStatusCode())
 		return
 	}
-	shortUrl, err := sqlconnect.CheckExistence(longUrl)
+
+	shortUrl, err := cache.CheckCacheForEncoding(longUrl)
 	if err == nil {
-		log.Println("here")
-		response := struct {
-			Status string `json:"status"`
-			Url    string `json:"url"`
-		}{
-			Status: "success",
-			Url:    shortUrl,
-		}
-		err = json.NewEncoder(w).Encode(response)
-		if err != nil {
-			http.Error(w, utils.EncodingMessageError.Error(), utils.EncodingMessageError.GetStatusCode())
-		}
+		utils.RespondWithShortUrl(w, shortUrl)
+		return
+	}
+	shortUrl, err = sqlconnect.CheckExistence(longUrl)
+	if err == nil {
+		utils.RespondWithShortUrl(w, shortUrl)
 		return
 	}
 	id, err := sqlconnect.EncoderDbHandler(longUrl)
